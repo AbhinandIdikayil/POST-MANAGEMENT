@@ -24,4 +24,8 @@ export class CustomError extends Error {
     static notFound(message: string) {
         return new CustomError(message, HttpStatusCode.NOT_FOUND)
     }
+
+    static conflict(message: string){
+        return new CustomError(message,HttpStatusCode.CONFLICT)
+    }
 }

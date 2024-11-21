@@ -7,8 +7,8 @@ const app = express()
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(errorMiddleware)
 app.use('/api', route);
+app.use(errorMiddleware)
 
 connectDB();
 
