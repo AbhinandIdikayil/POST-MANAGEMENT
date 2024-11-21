@@ -14,7 +14,7 @@ export class UserController {
             const { error } = signupValidator.validate(data);
             console.log(error)
             if (error) {
-                throw CustomError.badRequest(error.message.replace(/"/g, ''))
+                throw CustomError.badRequest(error?.message?.replace(/"/g, ''))
             }
             console.log(data);
             const existing = await userDbFunctions.findByEmail(data.email)
@@ -44,7 +44,7 @@ export class UserController {
             }
             const { value, error } = loginValidator.validate(data);
             if (error) {
-                throw CustomError.badRequest(error?.message || 'Invalid request data');
+                throw CustomError.badRequest(error?.message?.replace(/"/g, '') || 'Invalid request data');
             }
             if (!value.email) {
                 throw CustomError.badRequest('Email is required');

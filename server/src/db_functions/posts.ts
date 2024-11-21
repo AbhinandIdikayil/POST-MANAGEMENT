@@ -9,7 +9,7 @@ export class PostDbFunctions {
     }
 
     async findAll(): Promise<IPostModel[]> {
-        return await postModel.find();
+        return await postModel.find().select('-userId');
     }
 
     async deleteOne(id: string): Promise<IPostModel | null> {
@@ -21,6 +21,6 @@ export class PostDbFunctions {
             { _id: id },
             { $set: data },
             { new: true }
-        )
+        ).select('-userId')
     }
 }
