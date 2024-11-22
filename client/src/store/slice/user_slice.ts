@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { IinitialState } from "../../types";
-import { createPost, login, signup } from "../action/user_action";
+import { createPost, login, postsByOneUser, signup } from "../action/user_action";
 
 
 const initialState: IinitialState = {
@@ -21,7 +21,7 @@ export const userSlice = createSlice({
 
         })
         builder.addCase(signup.fulfilled, (state, { payload }) => {
-            state.user = payload
+            state.user = payload.data
         })
         builder.addCase(signup.rejected, (state) => {
             state.user = null
@@ -30,18 +30,25 @@ export const userSlice = createSlice({
             state.user = null
         })
         builder.addCase(login.fulfilled, (state, { payload }) => {
-            state.user = payload
+            state.user = payload.data
         })
         builder.addCase(login.rejected, (state) => {
             state.user = null
         })
-        builder.addCase(createPost.pending,(state) => {
-            
+        builder.addCase(createPost.pending, (state) => {
+
         })
-        builder.addCase(createPost.fulfilled,(state) => {
-            
+        builder.addCase(createPost.fulfilled, (state, { payload }) => {
+            state.posts = [...state.posts,payload.data]
         })
-        builder.addCase(createPost.rejected,(state) => {
+        builder.addCase(createPost.rejected, (state) => {
+        })
+        builder.addCase(postsByOneUser.pending, (state) => {
+        })
+        builder.addCase(postsByOneUser.fulfilled, (state,{payload}) => {
+            state.user_posts = payload.data
+        })
+        builder.addCase(postsByOneUser.rejected, (state) => {
         })
     }
 })

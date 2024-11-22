@@ -6,12 +6,13 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useDispatch } from "react-redux"
 import { AppDispatch } from "../../store/store"
 import { login } from "../../store/action/user_action"
+import { AxiosError } from "axios"
 
 function Login() {
     const dispatch = useDispatch<AppDispatch>();
     const navigate = useNavigate()
     type formData = z.infer<typeof loginValidation>
-    const { register, handleSubmit, formState: { errors } } = useForm<formData>({
+    const { register, handleSubmit, formState: { errors }, setError } = useForm<formData>({
         resolver: zodResolver(loginValidation),
         defaultValues: {
             email: '',
@@ -19,15 +20,22 @@ function Login() {
         }
     })
 
-    const onSubmit: SubmitHandler<formData> = async (data: formData) => {
+    const onSubmit = async (data: formData) => {
         try {
-            const res = await dispatch(login(data));
+            const res = await dispatch(login(data)).unwrap();
             console.log(res);
             navigate('/');
         } catch (error) {
+            if (error instanceof AxiosError) {
+                if (error.response?.data.message.includes('User')) {
+                    setError('email',{message:'User not found'})
+                }
+                if(error.response?.data.message.includes('Password')){
+                    setError('password',{message:'incorrect password'});
+                }
+            }
             console.log(error)
         }
-        console.log(data);
     }
 
     return (
@@ -35,7 +43,12 @@ function Login() {
             <div className="mx-auto max-w-screen-2xl px-4 md:px-8">
                 <h2 className="mb-4 text-center text-2xl font-bold text-gray-800 md:mb-8 lg:text-3xl">Login</h2>
 
-                <form onSubmit={handleSubmit(onSubmit)} className="mx-auto max-w-lg rounded-lg border">
+                <form onSubmit={(e) => {
+                    e.preventDefault()
+                    handleSubmit(onSubmit)()
+                }}
+                    className="mx-auto max-w-lg rounded-lg border"
+                >
                     <div className="flex flex-col gap-4 p-4 md:p-8">
                         <div>
                             <label htmlFor="email" className="mb-2 inline-block text-sm text-gray-800 sm:text-base">
@@ -69,7 +82,7 @@ function Login() {
                             />
                         </div>
 
-                        <button className="block rounded-lg bg-gray-800 px-8 py-3 text-center text-sm font-semibold text-white outline-none ring-gray-300 transition duration-100 hover:bg-gray-700 focus-visible:ring active:bg-gray-600 md:text-base">Log in</button>
+                        <button type="submit" className="block rounded-lg bg-gray-800 px-8 py-3 text-center text-sm font-semibold text-white outline-none ring-gray-300 transition duration-100 hover:bg-gray-700 focus-visible:ring active:bg-gray-600 md:text-base">Log in</button>
 
                         <div className="relative flex items-center justify-center">
                             <span className="absolute inset-x-0 h-px bg-gray-300"></span>

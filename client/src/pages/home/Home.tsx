@@ -1,5 +1,20 @@
+import { useEffect } from "react"
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../../store/store";
+import { listAllPost } from "../../store/action/user_action";
 
 function Home() {
+    const dispatch = useDispatch<AppDispatch>()
+    async function fetchPosts(){
+        try {
+            await dispatch(listAllPost()).unwrap()
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    useEffect(() => {
+        fetchPosts();
+    }, [])
     return (
         <>
             <div className="bg-white py-6 sm:py-8 lg:py-12">

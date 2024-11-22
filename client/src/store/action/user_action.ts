@@ -1,15 +1,19 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { LoginUser, SignupUser } from "../../types";
 import { AXIOS_INSTANCE } from "../../utils/axiosInstance";
+import { AxiosError } from "axios";
 
 export const login = createAsyncThunk(
     'user/login',
-    async (req: LoginUser) => {
+    async (req: LoginUser, { rejectWithValue }) => {
         try {
             const { data } = await AXIOS_INSTANCE.post('/login', { data: req });
             return data
         } catch (error) {
-            console.log(error)
+            if (error instanceof AxiosError) {
+                console.log(error.response)
+                return rejectWithValue(error)
+            }
         }
     }
 )
@@ -28,9 +32,9 @@ export const signup = createAsyncThunk(
 
 export const createPost = createAsyncThunk(
     'user/create-post',
-    async () => {
+    async (req: any) => {
         try {
-            const { data } = await AXIOS_INSTANCE.post('/post');
+            const { data } = await AXIOS_INSTANCE.post('/post', { data: req });
             return data
         } catch (error) {
             console.log(error);
@@ -68,6 +72,21 @@ export const listAllPost = createAsyncThunk(
     async () => {
         try {
             const { data } = await AXIOS_INSTANCE.get('/post');
+            return data
+        } catch (error) {
+            console.log(error);
+        }
+    }
+)
+
+
+
+export const postsByOneUser = createAsyncThunk(
+    'user/post-of-one-user',
+    async (id: string) => {
+        try {
+            const { data } = await AXIOS_INSTANCE.get('/posts-by-user', { params: { id } });
+            console.log(data)
             return data
         } catch (error) {
             console.log(error);
