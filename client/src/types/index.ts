@@ -21,9 +21,23 @@ export type Post = {
     image: string
 }
 
+export type PostT = {
+    _id: string,
+    title: string,
+    description: string,
+    image: string
+    userId: {
+        username: string,
+        email: string,
+        createdAt: string
+    },
+    createdAt: string
+}
+
+
 export interface IinitialState {
     user: User | null,
-    posts: Post[] | [],
+    posts: PostT[] | [],
     user_posts: Post[] | [],
-    post:Post | null
+    post: Post | null
 }

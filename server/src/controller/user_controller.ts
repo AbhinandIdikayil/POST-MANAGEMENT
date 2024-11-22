@@ -29,7 +29,7 @@ export class UserController {
             let token = generateToken(safeUser._id + '')
             res.status(200)
                 .cookie('USER', token, {
-                    //  httpOnly: true, sameSite: 'none', secure: true, 
+                     httpOnly: true, sameSite: 'none', secure: true, 
                      maxAge: 60 * 60 * 24 * 1000 * 12 }) //! for 12 days
                 .json({ success: true, data: safeUser });
 
@@ -63,7 +63,7 @@ export class UserController {
                 const { password, ...safeUser } = result.toObject ? result.toObject() : result;
                 return res.status(200)
                     .cookie('USER', token, { 
-                        // httpOnly: true, sameSite: 'none', secure: true, 
+                        httpOnly: true, sameSite: 'none', secure: true, 
                         maxAge: 60 * 60 * 24 * 1000 * 12 }) //! for 12 days
                     .json({ message: 'Logined succesfully', data: safeUser, success: true, })
             } else {
@@ -77,16 +77,16 @@ export class UserController {
     async logout(req: Request, res: Response, next: NextFunction) {
         try {
 
-            res.clearCookie('USER',
-                 { path: '/' }
-                ); // Ensure this matches the path of your cookie
-            // res.cookie('USER', '', {
-            //     maxAge: 1,
-            //     httpOnly: true,
-            //     sameSite: 'none',
-            //     secure: true,
-            //     path: '/',
-            // });
+            // res.clearCookie('USER',
+            //      { path: '/' }
+            //     ); // Ensure this matches the path of your cookie
+            res.cookie('USER', '', {
+                maxAge: 1,
+                httpOnly: true,
+                sameSite: 'none',
+                secure: true,
+                // path: '/',
+            });
             
             return res.status(200).json({ message: "logout successfull", success: true });
         } catch (error) {

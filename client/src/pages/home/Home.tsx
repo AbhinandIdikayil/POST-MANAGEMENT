@@ -2,6 +2,7 @@ import { useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store/store";
 import { listAllPost } from "../../store/action/user_action";
+import { dateToMmmmDdYy } from "../../utils/date";
 
 function Home() {
     const user = useSelector((state: RootState) => state.user)
@@ -21,9 +22,9 @@ function Home() {
             <div className="bg-white py-6 sm:py-8 lg:py-12">
                 <div className="mx-auto max-w-screen-2xl px-4 md:px-8">
                     <div className="mb-10 md:mb-16">
-                        <h2 className="mb-4 text-center text-2xl font-bold text-gray-800 md:mb-6 lg:text-3xl">Blog</h2>
+                        <h2 className="mb-4 text-center text-2xl font-bold text-gray-800 md:mb-6 lg:text-3xl">Posts</h2>
 
-                        <p className="mx-auto max-w-screen-md text-center text-gray-500 md:text-lg">This is a section of some simple filler text, also known as placeholder text. It shares some characteristics of a real written text but is random or otherwise generated.</p>
+                        {/* <p className="mx-auto max-w-screen-md text-center text-gray-500 md:text-lg">This is a section of some simple filler text, also known as placeholder text. It shares some characteristics of a real written text but is random or otherwise generated.</p> */}
                     </div>
 
                     <div className="grid gap-4 sm:grid-cols-2 md:gap-6 lg:grid-cols-3 xl:grid-cols-4 xl:gap-8">
@@ -31,32 +32,37 @@ function Home() {
                         {
                             user?.posts?.map(data => (
                                 <div key={data._id} className="flex flex-col overflow-hidden rounded-lg border bg-white">
-                                    <a href="#" className="group relative block h-48 overflow-hidden bg-gray-100 md:h-64">
+                                    <a className="group relative block h-40 overflow-hidden bg-gray-100 md:h-64">
                                         <img src={`${data.image}`} loading="lazy" alt="Photo by Minh Pham" className="absolute inset-0 h-full w-full object-cover object-center transition duration-200 group-hover:scale-110" />
 
                                         {/* auto=format&q=75&fit=crop&w=600 */}
                                     </a>
 
-                                    <div className="flex flex-1 flex-col p-4 sm:p-6">
+                                    <div className="flex flex-1 flex-col p-4 sm:p-6 h-auto">
                                         <h2 className="mb-2 text-lg font-semibold text-gray-800">
-                                            <a href="#" className="transition duration-100 hover:text-indigo-500 active:text-indigo-600">New trends in Tech</a>
+                                            <a href="#" className="transition duration-100 hover:text-indigo-500 active:text-indigo-600"> {data.title} </a>
                                         </h2>
 
-                                        <p className="mb-8 text-gray-500">This is a section of some simple filler text, also known as placeholder text. It shares some characteristics of a real written text.</p>
+                                        <p className="mb-8 text-gray-500 capitalize break-words">
+                                            {
+                                                data.description
+                                            }
+                                            {/* This is a section of some simple filler text, also known as placeholder text. It shares some characteristics of a real written text. */}
+                                        </p>
 
                                         <div className="mt-auto flex items-end justify-between">
                                             <div className="flex items-center gap-2">
                                                 <div className="h-10 w-10 shrink-0 overflow-hidden rounded-full bg-gray-100">
-                                                    <img src="https://images.unsplash.com/photo-1611898872015-0571a9e38375?auto=format&q=75&fit=crop&w=64" loading="lazy" alt="Photo by Brock Wegner" className="h-full w-full object-cover object-center" />
+                                                    <img src="https://cdn-icons-png.flaticon.com/512/3541/3541871.png" loading="lazy" alt="Photo by Brock Wegner" className="h-full w-full object-cover object-center" />
                                                 </div>
 
                                                 <div>
-                                                    <span className="block text-indigo-500">Mike Lane</span>
-                                                    <span className="block text-sm text-gray-400">July 19, 2021</span>
+                                                    <span className="block text-indigo-500"> {data.userId.username} </span>
+                                                    <span className="block text-sm text-gray-400"> {dateToMmmmDdYy(data.createdAt)} </span>
                                                 </div>
                                             </div>
 
-                                            <span className="rounded border px-2 py-1 text-sm text-gray-500">Article</span>
+                                            {/* <span className="rounded border px-2 py-1 text-sm text-gray-500">Post</span> */}
                                         </div>
                                     </div>
                                 </div>
@@ -69,17 +75,22 @@ function Home() {
                                 <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&q=75&fit=crop&w=600" loading="lazy" alt="Photo by Lorenzo Herrera" className="absolute inset-0 h-full w-full object-cover object-center transition duration-200 group-hover:scale-110" />
                             </a>
 
-                            <div className="flex flex-1 flex-col p-4 sm:p-6">
+                            <div className="flex flex-1 flex-col p-4 h-[150px]  sm:p-6">
                                 <h2 className="mb-2 text-lg font-semibold text-gray-800">
                                     <a href="#" className="transition duration-100 hover:text-indigo-500 active:text-indigo-600">Working with legacy stacks</a>
                                 </h2>
 
-                                <p className="mb-8 text-gray-500">This is a section of some simple filler text, also known as placeholder text. It shares some characteristics of a real written text.</p>
+                                <p className="mb-1 text-gray-500">Timple also known as placeholder text. It shares some characteristics of a real written text.</p>
 
                                 <div className="mt-auto flex items-end justify-between">
                                     <div className="flex items-center gap-2">
                                         <div className="h-10 w-10 shrink-0 overflow-hidden rounded-full bg-gray-100">
-                                            <img src="https://images.unsplash.com/photo-1586116104126-7b8e839d5b8c?auto=format&q=75&fit=crop&w=64" loading="lazy" alt="Photo by peter bucks" className="h-full w-full object-cover object-center" />
+                                            <img
+
+                                                // https://images.unsplash.com/photo-1586116104126-7b8e839d5b8c?auto=format&q=75&fit=crop&w=64
+                                                src="https://cdn-icons-png.flaticon.com/512/3541/3541871.png" loading="lazy" alt="Photo by peter bucks" className="h-full w-full object-cover object-center"
+                                            />
+                                            
                                         </div>
 
                                         <div>
@@ -93,63 +104,6 @@ function Home() {
                             </div>
                         </div>
 
-                        <div className="flex flex-col overflow-hidden rounded-lg border bg-white">
-                            <a href="#" className="group relative block h-48 overflow-hidden bg-gray-100 md:h-64">
-                                <img src="https://images.unsplash.com/photo-1542759564-7ccbb6ac450a?auto=format&q=75&fit=crop&w=600" loading="lazy" alt="Photo by Magicle" className="absolute inset-0 h-full w-full object-cover object-center transition duration-200 group-hover:scale-110" />
-                            </a>
-
-                            <div className="flex flex-1 flex-col p-4 sm:p-6">
-                                <h2 className="mb-2 text-lg font-semibold text-gray-800">
-                                    <a href="#" className="transition duration-100 hover:text-indigo-500 active:text-indigo-600">10 best smartphones for devs</a>
-                                </h2>
-
-                                <p className="mb-8 text-gray-500">This is a section of some simple filler text, also known as placeholder text. It shares some characteristics of a real written text.</p>
-
-                                <div className="mt-auto flex items-end justify-between">
-                                    <div className="flex items-center gap-2">
-                                        <div className="h-10 w-10 shrink-0 overflow-hidden rounded-full bg-gray-100">
-                                            <img src="https://images.unsplash.com/photo-1592660503155-7599a37f06a6?auto=format&q=75&fit=crop&w=64" loading="lazy" alt="Photo by Jassir Jonis" className="h-full w-full object-cover object-center" />
-                                        </div>
-
-                                        <div>
-                                            <span className="block text-indigo-500">Tylor Grey</span>
-                                            <span className="block text-sm text-gray-400">March 15, 2021</span>
-                                        </div>
-                                    </div>
-
-                                    <span className="rounded border px-2 py-1 text-sm text-gray-500">Article</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="flex flex-col overflow-hidden rounded-lg border bg-white">
-                            <a href="#" className="group relative block h-48 overflow-hidden bg-gray-100 md:h-64">
-                                <img src="https://images.unsplash.com/photo-1610465299996-30f240ac2b1c?auto=format&q=75&fit=crop&w=600" loading="lazy" alt="Photo by Martin Sanchez" className="absolute inset-0 h-full w-full object-cover object-center transition duration-200 group-hover:scale-110" />
-                            </a>
-
-                            <div className="flex flex-1 flex-col p-4 sm:p-6">
-                                <h2 className="mb-2 text-lg font-semibold text-gray-800">
-                                    <a href="#" className="transition duration-100 hover:text-indigo-500 active:text-indigo-600">8 High performance Notebooks</a>
-                                </h2>
-
-                                <p className="mb-8 text-gray-500">This is a section of some simple filler text, also known as placeholder text. It shares some characteristics of a real written text.</p>
-
-                                <div className="mt-auto flex items-end justify-between">
-                                    <div className="flex items-center gap-2">
-                                        <div className="h-10 w-10 shrink-0 overflow-hidden rounded-full bg-gray-100">
-                                            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&q=75&fit=crop&w=64" loading="lazy" alt="Photo by Aiony Haust" className="h-full w-full object-cover object-center" />
-                                        </div>
-
-                                        <div>
-                                            <span className="block text-indigo-500">Ann Park</span>
-                                            <span className="block text-sm text-gray-400">January 27, 2021</span>
-                                        </div>
-                                    </div>
-
-                                    <span className="rounded border px-2 py-1 text-sm text-gray-500">Article</span>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>

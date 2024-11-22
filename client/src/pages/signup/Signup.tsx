@@ -3,12 +3,14 @@ import { signupValidation } from '../../validation/signupValidation'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useDispatch } from 'react-redux'
-import { AppDispatch } from '../../store/store'
+import { useDispatch, useSelector } from 'react-redux'
+import { AppDispatch, RootState } from '../../store/store'
 import { signup } from '../../store/action/user_action'
+import { useEffect } from 'react'
 function Signup() {
     const dispatch = useDispatch<AppDispatch>();
     const navigate = useNavigate();
+    const user = useSelector((state:RootState) => state.user);
     type formData = z.infer<typeof signupValidation>
     const { register, handleSubmit, formState: { errors } } = useForm<formData>({
         resolver: zodResolver(signupValidation),
@@ -27,6 +29,12 @@ function Signup() {
             console.log(error);
         }
     }
+
+    useEffect(() => {
+        if(user.user){
+            navigate('/')
+        }
+    }, [])
 
     return (
         <div className="bg-white py-6 sm:py-8 lg:py-12">

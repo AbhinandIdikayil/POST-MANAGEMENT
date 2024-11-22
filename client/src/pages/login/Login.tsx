@@ -3,14 +3,16 @@ import { Link, useNavigate } from "react-router-dom"
 import { z } from "zod"
 import { loginValidation } from "../../validation/loginValidation"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useDispatch } from "react-redux"
-import { AppDispatch } from "../../store/store"
+import { useDispatch, useSelector } from "react-redux"
+import { AppDispatch, RootState } from "../../store/store"
 import { login } from "../../store/action/user_action"
 import { AxiosError } from "axios"
+import { useEffect } from "react"
 
 function Login() {
     const dispatch = useDispatch<AppDispatch>();
-    const navigate = useNavigate()
+    const navigate = useNavigate();
+    const user = useSelector((state: RootState) => state.user);
     type formData = z.infer<typeof loginValidation>
     const { register, handleSubmit, formState: { errors }, setError } = useForm<formData>({
         resolver: zodResolver(loginValidation),
@@ -20,6 +22,12 @@ function Login() {
         }
     })
 
+    useEffect(() => {
+        if (user.user) {
+            navigate('/')
+        }
+    }, [])
+
     const onSubmit = async (data: formData) => {
         try {
             const res = await dispatch(login(data)).unwrap();
@@ -28,10 +36,10 @@ function Login() {
         } catch (error) {
             if (error instanceof AxiosError) {
                 if (error.response?.data.message.includes('User')) {
-                    setError('email',{message:'User not found'})
+                    setError('email', { message: 'User not found' })
                 }
-                if(error.response?.data.message.includes('Password')){
-                    setError('password',{message:'incorrect password'});
+                if (error.response?.data.message.includes('Password')) {
+                    setError('password', { message: 'incorrect password' });
                 }
             }
             console.log(error)
