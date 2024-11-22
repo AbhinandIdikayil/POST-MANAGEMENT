@@ -16,6 +16,7 @@ route.route('/post')
 route.route('/posts-by-user').get(verify,postController.getPostOfOneUser.bind(postController));
 
 route.post('/login', userController.login.bind(userController));
+route.post('/logout', userController.logout.bind(userController));
 route.post('/signup', userController.register.bind(userController));
 
 
