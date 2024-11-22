@@ -24,5 +24,6 @@ export type Post = {
 export interface IinitialState {
     user: User | null,
     posts: Post[] | [],
-    user_posts: Post[] | []
+    user_posts: Post[] | [],
+    post:Post | null
 }

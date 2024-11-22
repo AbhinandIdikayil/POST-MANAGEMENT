@@ -7,3 +7,9 @@ export const createPostValidation = z.object({
         message: 'Only image types are allowed',
     }),
 })
+
+export const editPostValidation = z.object({
+    title: z.string().nonempty({ message: 'Title is required' }).regex(/^[A-Za-z\s]+$/, { message: 'Title must contain only characters' }),
+    description: z.string().nonempty({ message: 'Description is required' }).min(10, { message: 'Min 10 length' }),
+    image: z.string().optional(),
+})

@@ -6,14 +6,18 @@ import { createPost, deletePost, listAllPost, login, Logout, postsByOneUser, sig
 const initialState: IinitialState = {
     user: null,
     posts: [],
-    user_posts: []
+    user_posts: [],
+    post: null
 }
 
 export const userSlice = createSlice({
     name: 'user',
     initialState,
     reducers: {
-
+        editPost: (state, action) => {
+            console.log('hiisdf',action)
+            state.post = state.user_posts.find(obj => obj._id === action.payload) || null;
+        }
     },
     extraReducers: (builder) => {
         builder.addCase(signup.pending, (state) => {
@@ -78,5 +82,5 @@ export const userSlice = createSlice({
         })
     }
 })
-
+export const { editPost } = userSlice.actions
 export default userSlice.reducer

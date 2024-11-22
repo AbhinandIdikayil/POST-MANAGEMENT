@@ -44,9 +44,9 @@ export const createPost = createAsyncThunk(
 
 export const editPost = createAsyncThunk(
     'user/edit-post',
-    async () => {
+    async (res: any) => {
         try {
-            const { data } = await AXIOS_INSTANCE.put('/post');
+            const { data } = await AXIOS_INSTANCE.put('/post', { data: { data: res } });
             return data
         } catch (error) {
             console.log(error);

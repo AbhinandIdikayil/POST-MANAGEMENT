@@ -1,21 +1,70 @@
 import { useForm } from "react-hook-form"
 import { z } from "zod"
-import { createPostValidation } from "../../validation/createPostValidation"
+import { editPostValidation } from "../../validation/createPostValidation"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useDispatch, useSelector } from "react-redux"
+import { AppDispatch, RootState } from "../../store/store"
+import { useEffect, useState } from "react"
+import { LoaderIcon, X } from "lucide-react"
+import { uploadToCloudinary } from "../../utils/imageUpload"
+import { editPost } from "../../store/action/user_action"
 
-function EditPost() {
-  type formSchema = z.infer<typeof createPostValidation>
-  const { register, handleSubmit, formState: { errors } } = useForm<formSchema>({
-    resolver: zodResolver(createPostValidation),
+function EditPost({ closeModal }: { closeModal: () => void }) {
+  const [image, setImage] = useState<any>()
+  const dispatch = useDispatch<AppDispatch>()
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  type formSchema = z.infer<typeof editPostValidation>
+  const user = useSelector((state: RootState) => state.user);
+  const { register, handleSubmit, , setError, formState: { errors, isSubmitting } } = useForm<formSchema>({
+    resolver: zodResolver(editPostValidation),
     defaultValues: {
-      description: '',
-      title: '',
-      // image:'',
+      description: user?.post?.description,
+      title: user?.post?.title,
+      image:user?.post?.image,
     }
   });
-  function onSubmit() {
-
+  async function onSubmit(data: formSchema) {
+    try {
+      let img;
+      let res;
+      if (!image) {
+        setError("root", {
+          type: "manual",
+          message: 'Image is required',
+        });
+        return
+      }
+      if (!data.image) {
+        img = await uploadToCloudinary(image);
+      }
+      res = {
+        ...data,
+        image: img || data.image
+      }
+      console.log(res)
+      await dispatch(editPost(res)).unwrap()
+      closeModal()
+    } catch (error) {
+      console.log(error);
+    }
   }
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      const previewUrl = URL.createObjectURL(file);
+      setImagePreview(previewUrl);
+    }
+  };
+
+
+  useEffect(() => {
+    if (user?.post?.image) {
+      setImage(user?.post?.image);
+      setImagePreview(user?.post?.image);
+    }
+  }, [])
+
   return (
     <>
       <h1 className="z-50  capitalize text-black label text-xl article-form">
@@ -54,24 +103,30 @@ function EditPost() {
             <div className="">
               <label className='label text-sm' htmlFor="">
                 Image
-
                 {
-                  errors?.image?.message && (
-                    <span className="text-red-500"> ( {errors.image.message} )</span>
+                  errors?.root?.message && (
+                    <span className="text-red-500"> ( {errors?.root?.message} )</span>
                   )
                 }
               </label>
               <input
-                // {...register('image')}
                 type="file"
-                // accept="image/jpeg, image/png, image/jpg"
+                accept="image/jpeg, image/png, image/jpg"
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                   const files = e.target.files;
                   if (files && files.length > 0) {
+                    const file = files[0];
+                    const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+
+                    // Check if the file type is valid
+                    if (!allowedTypes.includes(file.type)) {
+                      setError('root', { message: 'Invalid file type! Please upload a JPEG or PNG image.' }); // You can replace this with your error handling logic
+                      return;
+                    }
                     console.log(files[0])
-                    // setValue('image', files[0]); // Manually set the file
+                    setImage(files[0]);
+                    handleImageChange(e)
                   } else {
-                    // setValue('image', ''); // Set to null if no file selected
                   }
                 }}
                 id=""
@@ -79,6 +134,32 @@ function EditPost() {
                 placeholder=""
               />
             </div>
+
+            <div>
+              {
+                imagePreview && (
+                  <div className='relative w-[150px] h-[108px]'>
+                    <X onClick={() => {
+                      setImagePreview('');
+                      setImage(null)
+                    }} className='absolute  bg-red-500 top-0 right-0' />
+                    <img src={imagePreview} className='w-full h-full ' />
+                  </div>
+                )
+              }
+            </div>
+            <div className="mt-6">
+              {
+                isSubmitting ? (
+                  <button className="button-4 max-md:h-10 w-full flex items-center justify-center py-2" >
+                    <LoaderIcon className='animate-spin' width={35} height={20} />
+                  </button>
+                ) : (
+                  <button type="submit" disabled={isSubmitting} className="button-4 max-md:h-10  w-full py-2 bg-[#6366f1]"> post article</button>
+                )
+              }
+            </div>
+
           </div>
         </form>
       </div>

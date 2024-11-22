@@ -1,49 +1,64 @@
 import { useDispatch, useSelector } from "react-redux"
 import EditPost from "../../components/EditPost/EditPost"
-import { ModalHOC } from "../../components/Modal/ModalHOC"
-import { Default_Modal_Styles } from "../../constants/Modal"
 import { AppDispatch, RootState } from "../../store/store"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { deletePost, postsByOneUser } from "../../store/action/user_action"
+import { editPost } from "../../store/slice/user_slice"
+import { X } from "lucide-react"
 
 function Profile() {
     const user = useSelector((state: RootState) => state.user);
     const dispath = useDispatch<AppDispatch>();
-    function EditPostButton({ onClick }: { onClick?: () => void }) {
-        return (
-            <span onClick={onClick} className="relative cursor-pointer mr-3 mb-3 inline-block rounded-lg border border-gray-500 px-2 py-1 text-xs text-gray-200 backdrop-blur md:px-3 md:text-sm">EDIT</span>
-        )
-    }
+    const [open, setOpen] = useState<boolean>(false);
 
-
-    const EditButton = ModalHOC(
-        EditPostButton,
-        EditPost,
-        Default_Modal_Styles.height,
-        Default_Modal_Styles.width
-    )
     async function fetch(id: string) {
         if (id) {
             await dispath(postsByOneUser(id)).unwrap()
         }
     }
     useEffect(() => {
-        if(user.user?._id){
+        if (user.user?._id) {
             fetch(user.user?._id)
         }
     }, [])
 
-    async function deleteById(id: string){
+    async function deleteById(id: string) {
         try {
             console.log(id)
-         await dispath(deletePost(id)).unwrap()
-        } catch (error) {   
+            await dispath(deletePost(id)).unwrap()
+        } catch (error) {
             console.log(error);
         }
     }
 
+    function onEdit(id: string) {
+        dispath(editPost(id));
+        setOpen(true);
+    }
+    const closeModal = () => setOpen(false)
+    const openModal = () => setOpen(true)
+
     return (
         <div className="bg-white py-6 sm:py-8 lg:py-12">
+            {
+                open && (
+                    <>
+                        <div
+                            style={{ zIndex: 99 }}
+                            className="fixed flex justify-center items-center top-0 left-0 z-50 w-full h-full bg-black bg-opacity-40"
+                        >
+                            <div
+                                className={`'w-1/3'} relative flex-col max-md:w-5/6 rounded-md border border-solid border-gray-500 shadow-md bg-white px-4 py-2`}
+                            >
+                                <div className="flex justify-between absolute right-4 top-2">
+                                    <X className="text-black" onClick={closeModal} />
+                                </div>
+                                <EditPost closeModal={closeModal} />
+                            </div>
+                        </div>
+                    </>
+                )
+            }
             <div className="mx-auto max-w-screen-2xl px-4 md:px-8">
                 <div className="mb-10 md:mb-16">
                     <h2 className="mb-4 text-center text-2xl font-bold text-gray-800 md:mb-6 lg:text-3xl">Liked posts</h2>
@@ -58,7 +73,7 @@ function Profile() {
                                 {/* auto=format&q=75&fit=crop&w=600 */}
                                 <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-gray-800 via-transparent to-transparent opacity-50"></div>
 
-                                <EditButton />
+                                <span onClick={() => onEdit(data._id)} className="relative cursor-pointer mr-3 mb-3 inline-block rounded-lg border border-gray-500 px-2 py-1 text-xs text-gray-200 backdrop-blur md:px-3 md:text-sm">EDIT</span>
                                 <span onClick={() => deleteById(data._id)} className="absolute left-0 ml-3 mb-3 inline-block rounded-lg border border-red-500 px-2 py-1 text-xs text-red-500 backdrop-blur md:px-3 md:text-sm">DELETE</span>
                             </a>
                         ))
@@ -67,13 +82,13 @@ function Profile() {
                         <img src="https://images.unsplash.com/photo-1593508512255-86ab42a8e620?auto=format&q=75&fit=crop&w=600" loading="lazy" alt="Photo by Minh Pham" className="absolute inset-0 h-full w-full object-cover object-center transition duration-200 group-hover:scale-110" />
                         <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-gray-800 via-transparent to-transparent opacity-50"></div>
 
-                        <EditButton />
+                        {/* <EditButton /> */}
                         <span className="absolute left-0 ml-3 mb-3 inline-block rounded-lg border border-red-500 px-2 py-1 text-xs text-red-500 backdrop-blur md:px-3 md:text-sm">DELETE</span>
                     </a>
 
                 </div>
             </div>
-        </div>
+        </div >
     )
 }
 
