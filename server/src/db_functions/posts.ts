@@ -23,4 +23,8 @@ export class PostDbFunctions {
             { new: true }
         ).select('-userId')
     }
+
+    async postsOfUneUser(id: string): Promise<IPostModel[] | []> {
+        return await postModel.find({ userId: id }).select('-userId');
+    }
 }

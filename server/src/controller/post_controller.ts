@@ -56,6 +56,18 @@ export class PostController {
         }
     }
 
+    async getPostOfOneUser(req: Request, res: Response, next: NextFunction) {
+        try {
+            if(!req?.query?.id){
+                throw CustomError.badRequest('Id is not provided');
+            }
+            const data = await postDbFunctions.postsOfUneUser(req?.query?.id+'');
+            return res.status(200).json({ success: true, data })
+        } catch (error) {
+            next(error);
+        }
+    }
+
     async deleteOneById(req: Request, res: Response, next: NextFunction) {
         try {
             const { data } = req.body

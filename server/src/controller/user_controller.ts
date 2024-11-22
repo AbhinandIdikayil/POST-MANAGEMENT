@@ -54,10 +54,14 @@ export class UserController {
             }
             const result = await userDbFunctions.findByEmail(value.email);
             if (!result) throw CustomError.badRequest('User not found');
-            const isPassword = await result?.comparePassword(result.password)
+            const isPassword = await result?.comparePassword(data.password)
+            console.log(isPassword, data);
             if (isPassword) {
+                let token = generateToken(result._id + '')
                 const { password, ...safeUser } = result.toObject ? result.toObject() : result;
-                return res.status(200).json({ message: 'Logined succesfully', data: safeUser, success: true, })
+                return res.status(200)
+                    .cookie('USER', token, { httpOnly: true, sameSite: 'none', secure: true, maxAge: 60 * 60 * 24 * 1000 * 12 }) //! for 12 days
+                    .json({ message: 'Logined succesfully', data: safeUser, success: true, })
             } else {
                 throw CustomError.badRequest('Password is incorrect');
             }
