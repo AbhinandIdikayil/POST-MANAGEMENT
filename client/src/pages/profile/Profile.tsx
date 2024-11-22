@@ -4,7 +4,7 @@ import { ModalHOC } from "../../components/Modal/ModalHOC"
 import { Default_Modal_Styles } from "../../constants/Modal"
 import { AppDispatch, RootState } from "../../store/store"
 import { useEffect } from "react"
-import { postsByOneUser } from "../../store/action/user_action"
+import { deletePost, postsByOneUser } from "../../store/action/user_action"
 
 function Profile() {
     const user = useSelector((state: RootState) => state.user);
@@ -33,6 +33,15 @@ function Profile() {
         }
     }, [])
 
+    async function deleteById(id: string){
+        try {
+            console.log(id)
+         await dispath(deletePost(id)).unwrap()
+        } catch (error) {   
+            console.log(error);
+        }
+    }
+
     return (
         <div className="bg-white py-6 sm:py-8 lg:py-12">
             <div className="mx-auto max-w-screen-2xl px-4 md:px-8">
@@ -44,13 +53,13 @@ function Profile() {
                 <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:gap-6 xl:gap-8">
                     {
                         user?.user_posts?.map(data => (
-                            <a className="group relative flex h-48 items-end justify-end overflow-hidden rounded-lg bg-gray-100 shadow-lg md:h-96">
+                            <a key={data._id} className="group relative flex h-48 items-end justify-end overflow-hidden rounded-lg bg-gray-100 shadow-lg md:h-96">
                                 <img src={`${data.image}`} loading="lazy" alt="Photo by Minh Pham" className="absolute inset-0 h-full w-full object-cover object-center transition duration-200 group-hover:scale-110" />
                                 {/* auto=format&q=75&fit=crop&w=600 */}
                                 <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-gray-800 via-transparent to-transparent opacity-50"></div>
 
                                 <EditButton />
-                                <span className="absolute left-0 ml-3 mb-3 inline-block rounded-lg border border-red-500 px-2 py-1 text-xs text-red-500 backdrop-blur md:px-3 md:text-sm">DELETE</span>
+                                <span onClick={() => deleteById(data._id)} className="absolute left-0 ml-3 mb-3 inline-block rounded-lg border border-red-500 px-2 py-1 text-xs text-red-500 backdrop-blur md:px-3 md:text-sm">DELETE</span>
                             </a>
                         ))
                     }

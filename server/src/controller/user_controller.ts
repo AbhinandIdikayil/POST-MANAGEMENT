@@ -28,7 +28,9 @@ export class UserController {
             const { password, ...safeUser } = user.toObject()
             let token = generateToken(safeUser._id + '')
             res.status(200)
-                .cookie('USER', token, { httpOnly: true, sameSite: 'none', secure: true, maxAge: 60 * 60 * 24 * 1000 * 12 }) //! for 12 days
+                .cookie('USER', token, {
+                    //  httpOnly: true, sameSite: 'none', secure: true, 
+                     maxAge: 60 * 60 * 24 * 1000 * 12 }) //! for 12 days
                 .json({ success: true, data: safeUser });
 
         } catch (error) {
@@ -60,7 +62,9 @@ export class UserController {
                 let token = generateToken(result._id + '')
                 const { password, ...safeUser } = result.toObject ? result.toObject() : result;
                 return res.status(200)
-                    .cookie('USER', token, { httpOnly: true, sameSite: 'none', secure: true, maxAge: 60 * 60 * 24 * 1000 * 12 }) //! for 12 days
+                    .cookie('USER', token, { 
+                        // httpOnly: true, sameSite: 'none', secure: true, 
+                        maxAge: 60 * 60 * 24 * 1000 * 12 }) //! for 12 days
                     .json({ message: 'Logined succesfully', data: safeUser, success: true, })
             } else {
                 throw CustomError.badRequest('Password is incorrect');
@@ -72,12 +76,19 @@ export class UserController {
 
     async logout(req: Request, res: Response, next: NextFunction) {
         try {
-            res.cookie('USER', '', {
-                maxAge: 1,
-                httpOnly: true,
-                sameSite: 'none', secure: true
-            });
-            res.status(200).json({ message: "logout successfull", success: true });
+
+            res.clearCookie('USER',
+                 { path: '/' }
+                ); // Ensure this matches the path of your cookie
+            // res.cookie('USER', '', {
+            //     maxAge: 1,
+            //     httpOnly: true,
+            //     sameSite: 'none',
+            //     secure: true,
+            //     path: '/',
+            // });
+            
+            return res.status(200).json({ message: "logout successfull", success: true });
         } catch (error) {
             next(error)
         }

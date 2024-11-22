@@ -12,7 +12,8 @@ export interface ModifiedRequest extends Request {
 
 export const verify = (req: Request, res: Response, next: NextFunction) => {
     try {
-        console.log(req.cookies)
+        console.log(req.cookies);
+
         const token = req.cookies.USER;
         if (!token) {
             throw CustomError.unAuthorized('No token provided');

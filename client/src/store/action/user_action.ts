@@ -56,10 +56,11 @@ export const editPost = createAsyncThunk(
 
 export const deletePost = createAsyncThunk(
     'user/delete-post',
-    async () => {
+    async (id: string) => {
         try {
-            const { data } = await AXIOS_INSTANCE.delete('/post');
-            return data
+            const { data } = await AXIOS_INSTANCE.delete('/post', { data: { data: { id } } });
+            console.log(data);
+            return id
         } catch (error) {
             console.log(error);
         }
@@ -87,6 +88,18 @@ export const postsByOneUser = createAsyncThunk(
         try {
             const { data } = await AXIOS_INSTANCE.get('/posts-by-user', { params: { id } });
             console.log(data)
+            return data
+        } catch (error) {
+            console.log(error);
+        }
+    }
+)
+
+export const Logout = createAsyncThunk(
+    'user/logout',
+    async () => {
+        try {
+            const { data } = await AXIOS_INSTANCE.get('/logout');
             return data
         } catch (error) {
             console.log(error);

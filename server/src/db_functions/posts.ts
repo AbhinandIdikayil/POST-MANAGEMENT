@@ -9,7 +9,7 @@ export class PostDbFunctions {
     }
 
     async findAll(): Promise<IPostModel[]> {
-        return await postModel.find().select('-userId');
+        return await postModel.find().populate('userId', '-password -_id');
     }
 
     async deleteOne(id: string): Promise<IPostModel | null> {

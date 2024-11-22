@@ -71,6 +71,7 @@ export class PostController {
     async deleteOneById(req: Request, res: Response, next: NextFunction) {
         try {
             const { data } = req.body
+            console.log(data,'-----');
             if (!data.id) {
                 throw CustomError.badRequest('Id is required');
             }
