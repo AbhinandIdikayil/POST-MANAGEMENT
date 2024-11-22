@@ -5,9 +5,12 @@ import { Link, useNavigate } from "react-router-dom"
 import { Logout } from "../../store/action/user_action"
 import { useDispatch } from "react-redux"
 import { AppDispatch } from "../../store/store"
+import LogoutConfitmation from "../Modal/Confitmation"
+import { useState } from "react"
+import { set } from "react-hook-form"
 
 function Navbar() {
-
+    const [open, setOpen] = useState<boolean>(false);
     const dispatch = useDispatch<AppDispatch>();
     const navigate = useNavigate()
     function createPostButton({ onClick }: { onClick?: () => void }) {
@@ -33,6 +36,11 @@ function Navbar() {
 
     return (
         <nav className="w-full h-12 bg-[#6366f1] flex justify-center items-center">
+            {
+                open && (
+                    <LogoutConfitmation text=" Are you sure you want to logout" cb={logout} open={open} setOpen={setOpen} />
+                )
+            }
             <main className="w-full flex justify-between items-center px-8 font-semibold text-xl capitalize">
                 <section>
                     <Button />
@@ -41,7 +49,7 @@ function Navbar() {
                     <Link to={'/profile'}>
                         <User className=" border-[#24292E] border-solid border bg-[#FAFBFC] rounded shadow-md cursor-pointer" />
                     </Link>
-                    <button onClick={logout} className="bg-[#FAFBFC] cursor-pointer mr-3  inline-block rounded-lg border border-red-500 px-2 py-1 text-xs text-red-500 backdrop-blur md:px-3 md:text-sm">
+                    <button onClick={() => setOpen(true)} className="bg-[#FAFBFC] cursor-pointer mr-3  inline-block rounded-lg border border-red-500 px-2 py-1 text-xs text-red-500 backdrop-blur md:px-3 md:text-sm">
                         Logout
                     </button>
                 </section>

@@ -37,7 +37,7 @@ function CreatePostForm({closeModal,...propts}:{closeModal:() => void}) {
         try {
             const image = await uploadToCloudinary(data.image);
             const res = {
-                userId: user.user?._id,
+                userId: user?.user?._id,
                 ...data,
                 image
             }

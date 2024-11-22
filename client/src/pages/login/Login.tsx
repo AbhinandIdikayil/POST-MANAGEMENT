@@ -8,13 +8,14 @@ import { AppDispatch, RootState } from "../../store/store"
 import { login } from "../../store/action/user_action"
 import { AxiosError } from "axios"
 import { useEffect } from "react"
+import { LoaderIcon } from "lucide-react"
 
 function Login() {
     const dispatch = useDispatch<AppDispatch>();
     const navigate = useNavigate();
-    const user = useSelector((state: RootState) => state.user);
+    const user = useSelector((state: RootState) => state?.user);
     type formData = z.infer<typeof loginValidation>
-    const { register, handleSubmit, formState: { errors }, setError } = useForm<formData>({
+    const { register, handleSubmit, formState: { errors, isSubmitting }, setError } = useForm<formData>({
         resolver: zodResolver(loginValidation),
         defaultValues: {
             email: '',
@@ -90,7 +91,17 @@ function Login() {
                             />
                         </div>
 
-                        <button type="submit" className="block rounded-lg bg-gray-800 px-8 py-3 text-center text-sm font-semibold text-white outline-none ring-gray-300 transition duration-100 hover:bg-gray-700 focus-visible:ring active:bg-gray-600 md:text-base">Log in</button>
+                        {
+                            isSubmitting ? (
+                                <button type="submit" className=" flex justify-center items-center  rounded-lg bg-gray-800 px-8 py-3 text-center text-sm font-semibold text-white outline-none ring-gray-300 transition duration-100 hover:bg-gray-700 focus-visible:ring active:bg-gray-600 md:text-base">
+                                    <LoaderIcon className='animate-spin' width={35} height={20} />
+                                </button>
+                            ) : (
+                                <button type="submit" disabled={isSubmitting} className="block rounded-lg bg-gray-800 px-8 py-3 text-center text-sm font-semibold text-white outline-none ring-gray-300 transition duration-100 hover:bg-gray-700 focus-visible:ring active:bg-gray-600 md:text-base">
+                                    Log in
+                                </button>
+                            )
+                        }
 
                         <div className="relative flex items-center justify-center">
                             <span className="absolute inset-x-0 h-px bg-gray-300"></span>

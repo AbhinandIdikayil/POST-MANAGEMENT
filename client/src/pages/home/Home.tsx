@@ -5,7 +5,7 @@ import { listAllPost } from "../../store/action/user_action";
 import { dateToMmmmDdYy } from "../../utils/date";
 
 function Home() {
-    const user = useSelector((state: RootState) => state.user)
+    const user = useSelector((state: RootState) => state?.user)
     const dispatch = useDispatch<AppDispatch>()
     async function fetchPosts() {
         try {
@@ -33,19 +33,19 @@ function Home() {
                             user?.posts?.map(data => (
                                 <div key={data._id} className="flex flex-col overflow-hidden rounded-lg border bg-white">
                                     <a className="group relative block h-40 overflow-hidden bg-gray-100 md:h-64">
-                                        <img src={`${data.image}`} loading="lazy" alt="Photo by Minh Pham" className="absolute inset-0 h-full w-full object-cover object-center transition duration-200 group-hover:scale-110" />
+                                        <img src={`${data?.image}`} loading="lazy" alt="Photo by Minh Pham" className="absolute inset-0 h-full w-full object-cover object-center transition duration-200 group-hover:scale-110" />
 
                                         {/* auto=format&q=75&fit=crop&w=600 */}
                                     </a>
 
                                     <div className="flex flex-1 flex-col p-4 sm:p-6 h-auto">
                                         <h2 className="mb-2 text-lg font-semibold text-gray-800">
-                                            <a href="#" className="transition duration-100 hover:text-indigo-500 active:text-indigo-600"> {data.title} </a>
+                                            <a href="#" className="transition duration-100 hover:text-indigo-500 active:text-indigo-600"> {data?.title} </a>
                                         </h2>
 
                                         <p className="mb-8 text-gray-500 capitalize break-words">
                                             {
-                                                data.description
+                                                data?.description
                                             }
                                             {/* This is a section of some simple filler text, also known as placeholder text. It shares some characteristics of a real written text. */}
                                         </p>
@@ -57,8 +57,8 @@ function Home() {
                                                 </div>
 
                                                 <div>
-                                                    <span className="block text-indigo-500"> {data.userId.username} </span>
-                                                    <span className="block text-sm text-gray-400"> {dateToMmmmDdYy(data.createdAt)} </span>
+                                                    <span className="block text-indigo-500"> {data?.userId?.username} </span>
+                                                    <span className="block text-sm text-gray-400"> {dateToMmmmDdYy(data?.createdAt)} </span>
                                                 </div>
                                             </div>
 

@@ -25,8 +25,8 @@ export class UserController {
             if (!user) {
                 throw CustomError.badRequest('Failed to register')
             }
-            const { password, ...safeUser } = user.toObject()
-            let token = generateToken(safeUser._id + '')
+            const { password, ...safeUser } = user?.toObject()
+            let token = generateToken(safeUser?._id + '')
             res.status(200)
                 .cookie('USER', token, {
                      httpOnly: true, sameSite: 'none', secure: true, 
