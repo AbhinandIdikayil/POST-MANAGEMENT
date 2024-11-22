@@ -15,7 +15,7 @@ function EditPost({ closeModal }: { closeModal: () => void }) {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   type formSchema = z.infer<typeof editPostValidation>
   const user = useSelector((state: RootState) => state.user);
-  const { register, handleSubmit, , setError, formState: { errors, isSubmitting } } = useForm<formSchema>({
+  const { register, handleSubmit,  setError, formState: { errors, isSubmitting } } = useForm<formSchema>({
     resolver: zodResolver(editPostValidation),
     defaultValues: {
       description: user?.post?.description,

@@ -15,14 +15,13 @@ export const userSlice = createSlice({
     initialState,
     reducers: {
         editPost: (state, action) => {
-            console.log('hiisdf',action)
+            console.log('hiisdf', action)
             state.post = state.user_posts.find(obj => obj._id === action.payload) || null;
         }
     },
     extraReducers: (builder) => {
         builder.addCase(signup.pending, (state) => {
             state.user = null
-
         })
         builder.addCase(signup.fulfilled, (state, { payload }) => {
             state.user = payload.data
@@ -39,15 +38,16 @@ export const userSlice = createSlice({
         builder.addCase(login.rejected, (state) => {
             state.user = null
         })
-        builder.addCase(createPost.pending, (state) => {
+        builder.addCase(createPost.pending, () => {
 
         })
         builder.addCase(createPost.fulfilled, (state, { payload }) => {
             state.posts = [...state.posts, payload.data]
         })
-        builder.addCase(createPost.rejected, (state) => {
+        builder.addCase(createPost.rejected, () => {
         })
         builder.addCase(postsByOneUser.pending, (state) => {
+            state.user_posts = []
         })
         builder.addCase(postsByOneUser.fulfilled, (state, { payload }) => {
             state.user_posts = payload.data
@@ -56,6 +56,7 @@ export const userSlice = createSlice({
             state.user_posts = []
         })
         builder.addCase(listAllPost.pending, (state) => {
+            state.posts = []
         })
         builder.addCase(listAllPost.fulfilled, (state, { payload }) => {
             state.posts = payload.data
@@ -71,14 +72,15 @@ export const userSlice = createSlice({
         builder.addCase(deletePost.rejected, (state) => {
             state.posts = []
         })
-        builder.addCase(Logout.pending, (state) => {
+        builder.addCase(Logout.pending, () => {
         })
         builder.addCase(Logout.fulfilled, (state) => {
             state.posts = []
             state.user = null
             state.user_posts = []
         })
-        builder.addCase(Logout.rejected, (state) => {
+        builder.addCase(Logout.rejected, () => {
+
         })
     }
 })

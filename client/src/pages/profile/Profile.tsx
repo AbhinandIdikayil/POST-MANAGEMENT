@@ -36,7 +36,7 @@ function Profile() {
         setOpen(true);
     }
     const closeModal = () => setOpen(false)
-    const openModal = () => setOpen(true)
+    // const openModal = () => setOpen(true)
 
     return (
         <div className="bg-white py-6 sm:py-8 lg:py-12">
