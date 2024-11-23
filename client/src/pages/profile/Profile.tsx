@@ -44,12 +44,16 @@ function Profile() {
 
     return (
         <div className="bg-white py-6 sm:py-8 lg:py-12">
-            <Confitmation
-                open={confirm}
-                setOpen={setConfirm}
-                text=" Are you sure you want to delete"
-                cb={() => deleteById(id)}
-            />
+            {
+                confirm && (
+                    <Confitmation
+                        open={confirm}
+                        setOpen={setConfirm}
+                        text=" Are you sure you want to delete"
+                        cb={() => deleteById(id)}
+                    />
+                )
+            }
             {
                 open && (
                     <>
