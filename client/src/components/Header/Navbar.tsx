@@ -7,7 +7,6 @@ import { useDispatch } from "react-redux"
 import { AppDispatch } from "../../store/store"
 import LogoutConfitmation from "../Modal/Confitmation"
 import { useState } from "react"
-import { set } from "react-hook-form"
 
 function Navbar() {
     const [open, setOpen] = useState<boolean>(false);
